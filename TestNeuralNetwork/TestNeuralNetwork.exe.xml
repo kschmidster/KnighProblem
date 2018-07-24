@@ -1,0 +1,13 @@
+<testsuites>
+	<testsuite name="AllSuites" tests="9">
+		<testcase classname="AllSuites" name="inputNeuronDefaultConstructible"/>
+		<testcase classname="AllSuites" name="outputNeuronDefaultConstructible"/>
+		<testcase classname="AllSuites" name="hiddenNeuronDefaultConstructible"/>
+		<testcase classname="AllSuites" name="connectionDefaultConstructible"/>
+		<testcase classname="AllSuites" name="connectionConstructableWithNeurons"/>
+		<testcase classname="AllSuites" name="inputLayerDefaultConstructible"/>
+		<testcase classname="AllSuites" name="outputLayerDefaultConstructible"/>
+		<testcase classname="AllSuites" name="hiddenLayerDefaultConstructible"/>
+		<testcase classname="AllSuites" name="neuralNetworkDefaultConstructible"/>
+	</testsuite>
+</testsuites>
