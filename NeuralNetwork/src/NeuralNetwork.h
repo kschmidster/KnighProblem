@@ -3,12 +3,14 @@
 
 #include "Layer.h"
 
+#include <vector>
+
 namespace nn { /* namespace neural network */
 
 struct NeuralNetwork {
 private:
 	InputLayer inputLayer { };
-	HiddenLayer<> hiddenLayer { };
+	std::vector<HiddenLayer> hiddenLayers { };
 	OutputLayer outputLayer { };
 };
 

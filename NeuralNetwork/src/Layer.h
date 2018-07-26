@@ -9,35 +9,30 @@ namespace nn { /* namespace neural network */
 
 namespace layer { /* namespace layer */
 
-template<typename NEURON>
 struct Layer {
 	Layer() = default;
-	explicit Layer(const int neurons) :
+	explicit Layer(size_t neurons) :
 			neurons(neurons) {
 	}
 private:
-	std::vector<NEURON> neurons { };
+	std::vector<nn::Neuron> neurons { };
 };
 
 } /* end namespace layer */
 
-struct InputLayer: layer::Layer<InputNeuron> {
+// Convinience types for type safety
+using layer::Layer;
+
+struct InputLayer : Layer {
 	using Layer::Layer;
 };
 
-struct OutputLayer: layer::Layer<OutputNeuron> {
+struct HiddenLayer : Layer {
 	using Layer::Layer;
 };
 
-template<typename INPUT = InputNeuron, typename OUTPUT = OutputNeuron>
-struct HiddenLayer {
-	HiddenLayer() = default;
-	HiddenLayer(const int inputNeurons, const int outputNeurons) :
-			inputNeurons(inputNeurons), outputNeurons(outputNeurons) {
-	}
-private:
-	std::vector<INPUT> inputNeurons { };
-	std::vector<OUTPUT> outputNeurons { };
+struct OutputLayer : Layer {
+	using Layer::Layer;
 };
 
 } /* end namespace neural network */

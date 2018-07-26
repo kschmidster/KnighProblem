@@ -8,51 +8,29 @@
 
 namespace nn { /* namespace neural network */
 
-template<typename T>
-struct Connection; // forward declaration
-
 namespace neuron { /* namespace neuron */
 
-template<typename NEURON>
+// template to break dependencies
+template<typename T>
 struct NeuronImpl {
-	NeuronImpl& operator*() { return *this; }
-	NeuronImpl const& operator*() const { return *this; }
+  void connect(T const& ptr, T const& other) {
+      inConnections.push_back( Connection<T>{ ptr, other } );
+  }
 private:
-	std::vector<Connection<NEURON>> connections { };
-};
-
-template<typename KIND>
-struct Neuron {
-	Neuron() : neuron { std::make_shared<KIND>() } { }
-protected:
-	std::shared_ptr<KIND> neuron { };
-};
-
-template<typename INPUT, typename OUTPUT>
-struct HiddenNeuronImpl {
-	HiddenNeuronImpl& operator*() { return *this; }
-	HiddenNeuronImpl const& operator*() const { return *this; }
-private:
-	std::vector<Connection<INPUT>> inputConnections { };
-	std::vector<Connection<OUTPUT>> outputConnections { };
+  std::vector<Connection<T>> inConnections { };
+  std::vector<Connection<T>> outConnections { };
 };
 
 } /* end namespace neuron */
 
-struct InputNeuron : neuron::Neuron<nn::neuron::NeuronImpl<InputNeuron>> {
-	using Neuron::Neuron;
-};
-
-struct OutputNeuron : neuron::Neuron<nn::neuron::NeuronImpl<OutputNeuron>> {
-	using Neuron::Neuron;
-};
-
-template<typename INPUT = InputNeuron, typename OUTPUT = OutputNeuron>
-struct HiddenNeuron {
-	using hiddenNeuron = HiddenNeuron<INPUT, OUTPUT>;
-	HiddenNeuron() : neuron { std::make_shared<hiddenNeuron>() } { }
-protected:
-	std::shared_ptr<hiddenNeuron> neuron { };
+struct Neuron {
+  Neuron() : neuron { std::make_shared<neuron::NeuronImpl<Neuron>>() } {
+  }
+  void connect(Neuron const& other) const {
+	  neuron.get()->connect(*this, other);
+  }
+private:
+  std::shared_ptr<neuron::NeuronImpl<Neuron>> neuron { };
 };
 
 } /* end namespace neural network */
