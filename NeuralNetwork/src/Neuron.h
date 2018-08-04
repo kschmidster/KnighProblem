@@ -10,27 +10,69 @@ namespace nn { /* namespace neural network */
 
 namespace neuron { /* namespace neuron */
 
-// template to break dependencies
 template<typename T>
-struct NeuronImpl {
-  void connect(T const& ptr, T const& other) {
-      inConnections.push_back( Connection<T>{ ptr, other } );
-  }
+struct Neuron {
+	using connection = Connection<T>;
+	using connections = std::vector<connection>;
+	using const_connections = std::vector<connection> const&;
+
+	Neuron() = default;
+	// Make sure this neuron is not copyable
+	Neuron(Neuron const& other) = delete;
+	Neuron& operator=(Neuron const& other) = delete;
+
+	void connectTo(T& self, T& other) {
+		outConnections.push_back(connection { self, other });
+		other.connectFrom(self);
+	}
+	void connectFrom(T& from, T& self) {
+		inConnections.push_back(connection { from, self });
+	}
+
+	const_connections getInConnections() const {
+		return inConnections;
+	}
+	const_connections getOutConnections() const {
+		return outConnections;
+	}
+
 private:
-  std::vector<Connection<T>> inConnections { };
-  std::vector<Connection<T>> outConnections { };
+	connections inConnections { };
+	connections outConnections { };
 };
 
 } /* end namespace neuron */
 
+/*
+ *  "Smart-Pointer" to neuron::Neuron. If we store the neuron::Neuron in the
+ *  Connection we are in trouble because we copy the Neurons into the Connection.
+ *  This would have a major impact.
+ */
 struct Neuron {
-  Neuron() : neuron { std::make_shared<neuron::NeuronImpl<Neuron>>() } {
-  }
-  void connect(Neuron const& other) const {
-	  neuron.get()->connect(*this, other);
-  }
+	using const_connections = std::vector<Connection<Neuron>> const&;
+	using neuron = neuron::Neuron<Neuron>;
+	using reference = std::shared_ptr<neuron>;
+
+	Neuron() :
+			ptr { std::make_shared<neuron>() } {
+	}
+
+	void connectTo(Neuron& other) {
+		ptr.get()->connectTo(*this, other);
+	}
+	void connectFrom(Neuron& other) {
+		ptr.get()->connectFrom(other, *this);
+	}
+
+	const_connections getInConnections() const {
+		return ptr.get()->getInConnections();
+	}
+	const_connections getOutConnections() const {
+		return ptr.get()->getOutConnections();
+	}
+
 private:
-  std::shared_ptr<neuron::NeuronImpl<Neuron>> neuron { };
+	reference ptr { };
 };
 
 } /* end namespace neural network */

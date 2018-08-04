@@ -1,23 +1,51 @@
 <testsuites>
-	<testsuite name="AllSuites" tests="19">
+	<testsuite name="AllSuites" tests="47">
 		<testcase classname="AllSuites" name="neuronDefaulConstructible"/>
 		<testcase classname="AllSuites" name="neuronCopyConstructible"/>
 		<testcase classname="AllSuites" name="neuronCopyAssignable"/>
+		<testcase classname="AllSuites" name="neuronOnHeapDefaulConstructible"/>
+		<testcase classname="AllSuites" name="neuronNotCopyConstructible"/>
+		<testcase classname="AllSuites" name="neuronNotCopyAssignable"/>
+		<testcase classname="AllSuites" name="connectTwoDifferentNeurons"/>
+		<testcase classname="AllSuites" name="connectSameNeurons"/>
 		<testcase classname="AllSuites" name="connectionDefaultConstructible"/>
 		<testcase classname="AllSuites" name="connectionCopyConstructible"/>
 		<testcase classname="AllSuites" name="connectionCopyAssignable"/>
-		<testcase classname="AllSuites" name="connectionConstructableWithNeurons"/>
+		<testcase classname="AllSuites" name="connectionConstructableSizeT"/>
 		<testcase classname="AllSuites" name="layerDefaulConstructible"/>
 		<testcase classname="AllSuites" name="layerCopyConstructible"/>
 		<testcase classname="AllSuites" name="layerCopyAssignable"/>
-		<testcase classname="AllSuites" name="hiddenLayerDefaultConstructible"/>
-		<testcase classname="AllSuites" name="hiddenLayerCopyConstructible"/>
-		<testcase classname="AllSuites" name="hiddenLayerCopyAssignable"/>
 		<testcase classname="AllSuites" name="constructInputLayerWithSomeNeurons"/>
 		<testcase classname="AllSuites" name="constructHiddenLayerWithSomeNeurons"/>
 		<testcase classname="AllSuites" name="constructOutputLayerWithSomeNeurons"/>
+		<testcase classname="AllSuites" name="connectInputWithHiddenLayerWithOneNeuronEach"/>
+		<testcase classname="AllSuites" name="connectInputWithHiddenLayerWithNineNeuronEach"/>
+		<testcase classname="AllSuites" name="connectInputWithHiddenLayerWithDifferenNeuronCount"/>
+		<testcase classname="AllSuites" name="connectHiddenLayersWithOneNeuronEach"/>
+		<testcase classname="AllSuites" name="connectHiddenLayersWithNineNeuronEach"/>
+		<testcase classname="AllSuites" name="connectHiddenLayersWithDifferentNeuronCount"/>
+		<testcase classname="AllSuites" name="connectHiddenLayersWithOutputLayerWithOneNeuronEach"/>
+		<testcase classname="AllSuites" name="connectHiddenLayersWithOutputLayerWithNineNeuronEach"/>
+		<testcase classname="AllSuites" name="connectHiddenLayersWithOutputLayerWithDifferenNeuronCount"/>
 		<testcase classname="AllSuites" name="neuralNetworkDefaultConstructible"/>
 		<testcase classname="AllSuites" name="neuralNetworkCopyConstructible"/>
 		<testcase classname="AllSuites" name="neuralNetworkCopyAssignable"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWhenLayersArePassedWithoutHiddenLayer"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWhenLayersArePassed"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWhenLayersArePassedComplexWithoutHiddenLayer"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWhenLayersArePassedComplex"/>
+		<testcase classname="AllSuites" name="neuralNetworkAsync"/>
+		<testcase classname="AllSuites" name="neuralNetworkAsyncWithMultipleHiddenLayers"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWithBuilderWithoutHiddenLayer"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWithBuilderComplexWithoutHiddenLayer"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWithBuilder"/>
+		<testcase classname="AllSuites" name="neuralNetworkConstuctsItselfCorrectlyWithBuilderComplex"/>
+		<testcase classname="AllSuites" name="neuralAsyncNetworkConstuctsItselfCorrectlyWithBuilderWithoutHiddenLayer"/>
+		<testcase classname="AllSuites" name="neuralAsyncNetworkConstuctsItselfCorrectlyWithBuilderWithHiddenLayer"/>
+		<testcase classname="AllSuites" name="neuralAsyncNetworkConstuctsItselfCorrectlyWithBuilderWithMultipleHiddenLayer"/>
+		<testcase classname="AllSuites" name="tryConstructNeuralNetworkWithInvalidInputLayer"/>
+		<testcase classname="AllSuites" name="tryConstructNeuralNetworkWithInvalidOutputLayer"/>
+		<testcase classname="AllSuites" name="tryConstructNeuralNetworkWithInvalidInputLayerWithBuilder"/>
+		<testcase classname="AllSuites" name="tryConstructNeuralNetworkWithInvalidOutputLayerWithBuilder"/>
 	</testsuite>
 </testsuites>
