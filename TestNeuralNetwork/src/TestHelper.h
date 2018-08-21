@@ -14,7 +14,9 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
 
-struct testLayerConnections {
+namespace tlc { /* namespace tlc */
+
+struct TestLayerConnections {
 	void operator()(nn::Layer const& layer, size_t const inConnections, size_t const outConnections) const {
 		std::for_each(layer.getNeurons().begin(), layer.getNeurons().end(), [&](nn::Neuron const& neuron) {
 					ASSERT_EQUAL(inConnections, neuron.getInConnections().size());
@@ -23,9 +25,13 @@ struct testLayerConnections {
 	}
 };
 
-const auto testLayer = std::bind(testLayerConnections { }, _1, _2, _3);
+} /* end namespace tlc */
 
-struct testNeuralNetworkConnections {
+const auto testLayer = std::bind(tlc::TestLayerConnections { }, _1, _2, _3);
+
+namespace tnnc { /* namespace tnnc */
+
+struct TestNeuralNetworkConnections {
 	void operator()(nn::NeuralNetwork const& nn) const {
 		using namespace nn;
 
@@ -48,6 +54,7 @@ struct testNeuralNetworkConnections {
 		}
 	}
 
+private:
 	void testSimpleAsync(nn::NeuralNetwork const& nn) const {
 		testLayer(nn.getInputLayer(), 0, nn.getOutputLayer().getNeurons().size());
 		testLayer(nn.getOutputLayer(), nn.getInputLayer().getNeurons().size(), 0);
@@ -72,7 +79,9 @@ struct testNeuralNetworkConnections {
 	}
 };
 
-const auto testNeuronalNetwork = testNeuralNetworkConnections { };
+} /* end namespace tnnc */
+
+const auto testNeuronalNetwork = tnnc::TestNeuralNetworkConnections { };
 
 } /* namespace test */
 

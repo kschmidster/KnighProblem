@@ -1,0 +1,11 @@
+<testsuites>
+	<testsuite name="AllSuites" tests="7">
+		<testcase classname="AllSuites" name="allTilesShouldBeFree"/>
+		<testcase classname="AllSuites" name="placeKnightAndCheckTileState"/>
+		<testcase classname="AllSuites" name="placeKnightAndMoveItCheckTiles"/>
+		<testcase classname="AllSuites" name="moveKnightAroundAndCheckTiles"/>
+		<testcase classname="AllSuites" name="moveToGoodPositions"/>
+		<testcase classname="AllSuites" name="moveToSamePosition"/>
+		<testcase classname="AllSuites" name="moveToInvalidPositions"/>
+	</testsuite>
+</testsuites>

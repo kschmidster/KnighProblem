@@ -3,11 +3,8 @@
 #include "xml_listener.h"
 #include "cute_runner.h"
 
-#include "NeuralNetworkTest.h"
-#include "LayerTest.h"
-#include "NeuronTest.h"
-#include "ConnectionTest.h"
-#include "NeuralNetworkBuilderTest.h"
+#include "ChessboardTest.h"
+#include "ValidatorTest.h"
 
 bool runAllTestSuites(int argc, char const *argv[]) {
 	cute::xml_file_opener xmlfile(argc, argv);
@@ -15,11 +12,8 @@ bool runAllTestSuites(int argc, char const *argv[]) {
 	auto runner = cute::makeRunner(lis, argc, argv);
 
 	cute::suite s { };
-	s += make_suite_NeuronTest();
-	s += make_suite_ConnectionTest();
-	s += make_suite_LayerTest();
-	s += make_suite_NeuralNetworkTest();
-	s += make_suite_NeuralNetworkBuilderTest();
+	s += make_suite_ChessboardTest();
+	s += make_suite_ValidatorTest();
 
 	bool success = runner(s, "AllSuites");
 	return success;
