@@ -14,7 +14,7 @@ enum TileState
 };
 
 struct Chessboard {
-	static const size_t TILES { 64 };
+	static const size_t TILES { 8 };
 	using type = std::array<std::array<TileState, TILES>, TILES>;
 	using creference_chessboard = type const&;
 

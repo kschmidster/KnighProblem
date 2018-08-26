@@ -19,16 +19,16 @@ void allTilesShouldBeFree() {
 
 void placeKnightAndCheckTileState() {
 	cb::Chessboard chessboard { };
-	chessboard.placeKnight(10, 10);
+	chessboard.placeKnight(4, 4);
 	ASSERT(cb::TileState::CURRENT == chessboard.getTileState(chessboard.getKnight().getPosition()));
 }
 
 void placeKnightAndMoveItCheckTiles() {
 	cb::Chessboard chessboard { };
-	cb::Position const start { 10, 10 };
+	cb::Position const start { 4, 4 };
 
 	chessboard.placeKnight(start);
-	chessboard.moveKnightTo(8, 9);
+	chessboard.moveKnightTo(2, 3);
 
 	ASSERT(cb::TileState::CURRENT == chessboard.getTileState(chessboard.getKnight().getPosition()));
 	ASSERT(cb::TileState::VISITED == chessboard.getTileState(start));
@@ -36,10 +36,10 @@ void placeKnightAndMoveItCheckTiles() {
 
 void moveKnightAroundAndCheckTiles() {
 	cb::Chessboard chessboard { };
-	cb::Position const start { 10, 10 };
-	cb::Position const pos1 { 8, 9 };
-	cb::Position const pos2 { 10, 8 };
-	cb::Position const pos3 { 9, 10 };
+	cb::Position const start { 4, 4 };
+	cb::Position const pos1 { 2, 3 };
+	cb::Position const pos2 { 3, 5 };
+	cb::Position const pos3 { 4, 3 };
 
 	chessboard.placeKnight(start);
 	chessboard.moveKnightTo(pos1);
@@ -52,11 +52,25 @@ void moveKnightAroundAndCheckTiles() {
 	ASSERT(cb::TileState::VISITED == chessboard.getTileState(pos2));
 }
 
+void testStateAfterInvalidMove() {
+	cb::Chessboard chessboard { };
+	cb::Position const start { 4, 4 };
+
+	chessboard.placeKnight(start);
+	chessboard.moveKnightTo( { } );
+
+	ASSERT(chessboard.getKnight().getPosition() == start);
+	ASSERT(not chessboard.isValid());
+	ASSERT(cb::TileState::CURRENT == chessboard.getTileState(chessboard.getKnight().getPosition()));
+	ASSERT(cb::TileState::FREE == chessboard.getTileState( { } ));
+}
+
 cute::suite make_suite_ChessboardTest() {
 	cute::suite s { };
 	s.push_back(CUTE(allTilesShouldBeFree));
 	s.push_back(CUTE(placeKnightAndCheckTileState));
 	s.push_back(CUTE(placeKnightAndMoveItCheckTiles));
 	s.push_back(CUTE(moveKnightAroundAndCheckTiles));
+	s.push_back(CUTE(testStateAfterInvalidMove));
 	return s;
 }
