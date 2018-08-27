@@ -3,8 +3,10 @@
 
 #include "Connection.h"
 
+#include <cmath>
 #include <vector>
 #include <memory>
+#include <algorithm>
 
 namespace nn { /* namespace neural network */
 
@@ -13,7 +15,7 @@ namespace neuron { /* namespace neuron */
 template<typename T>
 struct Neuron {
 	using connection = Connection<T>;
-	using connections = std::vector<connection>;
+	using conns = std::vector<connection>;
 	using const_connections = std::vector<connection> const&;
 
 	Neuron() = default;
@@ -21,24 +23,50 @@ struct Neuron {
 	Neuron(Neuron const& other) = delete;
 	Neuron& operator=(Neuron const& other) = delete;
 
-	void connectTo(T& self, T& other) {
-		outConnections.push_back(connection { self, other });
-		other.connectFrom(self);
-	}
-	void connectFrom(T& from, T& self) {
-		inConnections.push_back(connection { from, self });
+	void connectTo(T& other, float weight) {
+		connections.push_back(connection { other, weight });
 	}
 
-	const_connections getInConnections() const {
-		return inConnections;
+	void setInput(double input) {
+		value = input;
 	}
-	const_connections getOutConnections() const {
-		return outConnections;
+	void addInput(double input) {
+		value += input;
+	}
+	void clearInput() {
+		value = 0.0;
+	}
+	void processInput() {
+		sendOutput(sigmoidOf(value));
+	}
+
+	void randomizeConnections() {
+		std::for_each(connections.begin(), connections.end(), [](Connection<T> &connection) {
+			connection.setRandomWeight();
+		});
+	}
+
+	static double sigmoidOf(double const value) {
+			return 1.0 / (1.0 + std::exp(- value));
+	}
+
+	double getValue() const {
+		return value;
+	}
+	const_connections getConnections() const {
+		return connections;
 	}
 
 private:
-	connections inConnections { };
-	connections outConnections { };
+	void sendOutput(double output) {
+		std::for_each(connections.begin(), connections.end(), [&output](Connection<T> &connection) {
+			double input = connection.getWeight() * output;
+			connection.getNeuron().addInput(input);
+		});
+	}
+
+	double value { };
+	conns connections { };
 };
 
 } /* end namespace neuron */
@@ -57,18 +85,32 @@ struct Neuron {
 			ptr { std::make_shared<neuron>() } {
 	}
 
-	void connectTo(Neuron& other) {
-		ptr.get()->connectTo(*this, other);
-	}
-	void connectFrom(Neuron& other) {
-		ptr.get()->connectFrom(other, *this);
+	void connectTo(Neuron& other, float const weight = 0.f) {
+		ptr.get()->connectTo(other, weight);
 	}
 
-	const_connections getInConnections() const {
-		return ptr.get()->getInConnections();
+	void setInput(double input) {
+		ptr.get()->setInput(input);
+	}
+	void addInput(double input) {
+		ptr.get()->addInput(input);
+	}
+	void clearInput() {
+		ptr.get()->clearInput();
+	}
+	void processInput() {
+		ptr.get()->processInput();
+	}
+
+	void randomizeWeights() {
+		ptr.get()->randomizeConnections();
+	}
+
+	double getValue() const {
+		return ptr.get()->getValue();
 	}
 	const_connections getOutConnections() const {
-		return ptr.get()->getOutConnections();
+		return ptr.get()->getConnections();
 	}
 
 private:

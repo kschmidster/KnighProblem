@@ -6,10 +6,12 @@
 #include <vector>
 #include <utility>
 #include <stdexcept>
+#include <algorithm>
+#include <stdlib.h>
 
 namespace nn { /* namespace neural network */
 
-namespace lv { /* namespace lv */
+namespace lv { /* namespace layer validator */
 
 struct LayerValidator {
 	bool operator()(InputLayer const& inputLayer, OutputLayer const& outputLayer) const {
@@ -20,7 +22,7 @@ struct LayerValidator {
 	}
 };
 
-} /* namespace lv */
+} /* namespace layer validator */
 
 const auto validateLayer = lv::LayerValidator { };
 
@@ -28,6 +30,9 @@ struct NeuralNetwork {
 	using const_ref_inputLayer = InputLayer const&;
 	using const_ref_hiddenLayer = std::vector<HiddenLayer> const&;
 	using const_ref_outputLayer = OutputLayer const&;
+
+	// TODO maybe connection strategy
+	// consider bias
 
 	NeuralNetwork() = default;
 	NeuralNetwork(InputLayer&& inputLayer, OutputLayer&& outputLayer, std::vector<HiddenLayer>&& hiddenLayers = std::vector<HiddenLayer> { }) :
@@ -37,6 +42,18 @@ struct NeuralNetwork {
 			throw std::invalid_argument { "Passed Layers are not valid" };
 		}
 		connectLayers();
+		// TODO okay for the moment, but maybe init from file
+		randomizeWeights();
+	}
+
+	// Could also use some own number type
+	void setInputs(std::vector<double> const& inputs) {
+		inputLayer.setInputs(inputs);
+	}
+	std::vector<double> const& getOutputs() {
+		clearInputsInHiddenAndOutputLayers();
+		processInputs();
+		return outputLayer.getOutputs();
 	}
 
 	const_ref_inputLayer getInputLayer() const {
@@ -64,6 +81,30 @@ private:
 			(*i).connectTo(*(i + 1));
 		}
 		hiddenLayers.at(hiddenLayers.size() - 1).connectTo(outputLayer);
+	}
+
+	void randomizeWeights() {
+		inputLayer.randomizeWeights();
+
+		if (!hiddenLayers.empty()) {
+			std::for_each(hiddenLayers.begin(), hiddenLayers.end(), [](HiddenLayer &hiddenLayer) {
+				hiddenLayer.randomizeWeights();
+			});
+		}
+	}
+
+	void clearInputsInHiddenAndOutputLayers() {
+		std::for_each(hiddenLayers.begin(), hiddenLayers.end(), [](Layer &layer) {
+			layer.clearInputs();
+		});
+		outputLayer.clearInputs();
+	}
+	void processInputs() {
+		inputLayer.processInputs();
+		std::for_each(hiddenLayers.begin(), hiddenLayers.end(), [](Layer &layer) {
+			layer.processInputs();
+		});
+		outputLayer.processInputs();
 	}
 
 	InputLayer inputLayer { };

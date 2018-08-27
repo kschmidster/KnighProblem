@@ -22,20 +22,25 @@ void connectionCopyAssignable() {
 void connectionConstructableSizeT() {
 	size_t const& ref { 12 };
 
-	Connection<size_t> { ref, ref };
-	ASSERT(true); // Everything okay if we are here
+	Connection<size_t> const connection { ref };
+	ASSERT_EQUAL(.0f, connection.getWeight());
 }
 
-void connectionTryConstructWithOneArgument() {
+void connectionConstructableWithWeight() {
 	size_t const& ref { 12 };
+	float const expected { 42.f };
 
-	ASSERT_THROWS((Connection<size_t> { ref }), std::invalid_argument);
+	Connection<size_t> const connection { ref, expected };
+	ASSERT_EQUAL(expected, connection.getWeight());
 }
 
-void connectionTryConstructWithThreeArguments() {
-	size_t const& ref { 12 };
+void connectionSetRandomWeight() {
+	float const weight { 42.f };
 
-	ASSERT_THROWS((Connection<size_t> { ref, ref, ref }), std::invalid_argument);
+	Connection<size_t> connection { 42, weight };
+	connection.setRandomWeight();
+
+	ASSERT_NOT_EQUAL_TO(weight, connection.getWeight());
 }
 
 cute::suite make_suite_ConnectionTest() {
@@ -44,7 +49,7 @@ cute::suite make_suite_ConnectionTest() {
 	s.push_back(CUTE(connectionCopyConstructible));
 	s.push_back(CUTE(connectionCopyAssignable));
 	s.push_back(CUTE(connectionConstructableSizeT));
-	s.push_back(CUTE(connectionTryConstructWithOneArgument));
-	s.push_back(CUTE(connectionTryConstructWithThreeArguments));
+	s.push_back(CUTE(connectionConstructableWithWeight));
+	s.push_back(CUTE(connectionSetRandomWeight));
 	return s;
 }

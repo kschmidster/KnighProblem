@@ -1,5 +1,5 @@
 <testsuites>
-	<testsuite name="AllSuites" tests="49">
+	<testsuite name="AllSuites" tests="60">
 		<testcase classname="AllSuites" name="neuronDefaulConstructible"/>
 		<testcase classname="AllSuites" name="neuronCopyConstructible"/>
 		<testcase classname="AllSuites" name="neuronCopyAssignable"/>
@@ -8,12 +8,20 @@
 		<testcase classname="AllSuites" name="neuronNotCopyAssignable"/>
 		<testcase classname="AllSuites" name="connectTwoDifferentNeurons"/>
 		<testcase classname="AllSuites" name="connectSameNeurons"/>
+		<testcase classname="AllSuites" name="connectNeuronsWithWeight"/>
+		<testcase classname="AllSuites" name="neuronSetInput"/>
+		<testcase classname="AllSuites" name="neuronAddInput"/>
+		<testcase classname="AllSuites" name="neuronClearInput"/>
+		<testcase classname="AllSuites" name="neuronInputNeuronProcessInput"/>
+		<testcase classname="AllSuites" name="neuronInputNeuronProcessInputWithWeight"/>
+		<testcase classname="AllSuites" name="neuronInputNeuronProcessInputWithWeightDouble"/>
+		<testcase classname="AllSuites" name="neuronTestSigmoid"/>
 		<testcase classname="AllSuites" name="connectionDefaultConstructible"/>
 		<testcase classname="AllSuites" name="connectionCopyConstructible"/>
 		<testcase classname="AllSuites" name="connectionCopyAssignable"/>
 		<testcase classname="AllSuites" name="connectionConstructableSizeT"/>
-		<testcase classname="AllSuites" name="connectionTryConstructWithOneArgument"/>
-		<testcase classname="AllSuites" name="connectionTryConstructWithThreeArguments"/>
+		<testcase classname="AllSuites" name="connectionConstructableWithWeight"/>
+		<testcase classname="AllSuites" name="connectionSetRandomWeight"/>
 		<testcase classname="AllSuites" name="layerDefaulConstructible"/>
 		<testcase classname="AllSuites" name="layerCopyConstructible"/>
 		<testcase classname="AllSuites" name="layerCopyAssignable"/>
@@ -29,6 +37,9 @@
 		<testcase classname="AllSuites" name="connectHiddenLayersWithOutputLayerWithOneNeuronEach"/>
 		<testcase classname="AllSuites" name="connectHiddenLayersWithOutputLayerWithNineNeuronEach"/>
 		<testcase classname="AllSuites" name="connectHiddenLayersWithOutputLayerWithDifferenNeuronCount"/>
+		<testcase classname="AllSuites" name="connectInputLayerWithHiddenLayerCheckWeights"/>
+		<testcase classname="AllSuites" name="connectInputLayerWithHiddenLayerWithWeights"/>
+		<testcase classname="AllSuites" name="connectInputLayerWithHiddenLayerWithWrongAmountOfWeights"/>
 		<testcase classname="AllSuites" name="neuralNetworkDefaultConstructible"/>
 		<testcase classname="AllSuites" name="neuralNetworkCopyConstructible"/>
 		<testcase classname="AllSuites" name="neuralNetworkCopyAssignable"/>

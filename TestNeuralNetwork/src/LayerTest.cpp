@@ -6,6 +6,9 @@
 #include "NeuronTest.h"
 #include "TestHelper.h"
 
+#include <vector>
+#include <algorithm>
+
 using nn::layer::Layer;
 using nn::test::testLayer;
 
@@ -44,8 +47,8 @@ void connectInputWithHiddenLayerWithOneNeuronEach() {
 
 	inputLayer.connectTo(hiddenLayer);
 
-	testLayer(inputLayer, 0, 1);
-	testLayer(hiddenLayer, 1, 0);
+	testLayer(inputLayer, 1);
+	testLayer(hiddenLayer, 0);
 }
 
 void connectInputWithHiddenLayerWithNineNeuronEach() {
@@ -55,8 +58,8 @@ void connectInputWithHiddenLayerWithNineNeuronEach() {
 
 	inputLayer.connectTo(hiddenLayer);
 
-	testLayer(inputLayer, 0, 9);
-	testLayer(hiddenLayer, 9, 0);
+	testLayer(inputLayer, 9);
+	testLayer(hiddenLayer, 0);
 }
 
 void connectInputWithHiddenLayerWithDifferenNeuronCount() {
@@ -66,8 +69,8 @@ void connectInputWithHiddenLayerWithDifferenNeuronCount() {
 
 	inputLayer.connectTo(hiddenLayer);
 
-	testLayer(inputLayer, 0, 9);
-	testLayer(hiddenLayer, 9, 0);
+	testLayer(inputLayer, 9);
+	testLayer(hiddenLayer, 0);
 }
 
 void connectHiddenLayersWithOneNeuronEach() {
@@ -77,8 +80,8 @@ void connectHiddenLayersWithOneNeuronEach() {
 
 	hiddenLayer1.connectTo(hiddenLayer2);
 
-	testLayer(hiddenLayer1, 0, 1);
-	testLayer(hiddenLayer2, 1, 0);
+	testLayer(hiddenLayer1, 1);
+	testLayer(hiddenLayer2, 0);
 }
 
 void connectHiddenLayersWithNineNeuronEach() {
@@ -88,8 +91,8 @@ void connectHiddenLayersWithNineNeuronEach() {
 
 	hiddenLayer1.connectTo(hiddenLayer2);
 
-	testLayer(hiddenLayer1, 0, 9);
-	testLayer(hiddenLayer2, 9, 0);
+	testLayer(hiddenLayer1, 9);
+	testLayer(hiddenLayer2, 0);
 }
 
 void connectHiddenLayersWithDifferentNeuronCount() {
@@ -99,8 +102,8 @@ void connectHiddenLayersWithDifferentNeuronCount() {
 
 	hiddenLayer1.connectTo(hiddenLayer2);
 
-	testLayer(hiddenLayer1, 0, 4);
-	testLayer(hiddenLayer2, 3, 0);
+	testLayer(hiddenLayer1, 4);
+	testLayer(hiddenLayer2, 0);
 }
 
 void connectHiddenLayersWithOutputLayerWithOneNeuronEach() {
@@ -110,8 +113,8 @@ void connectHiddenLayersWithOutputLayerWithOneNeuronEach() {
 
 	hiddenLayer.connectTo(outputLayer);
 
-	testLayer(hiddenLayer, 0, 1);
-	testLayer(outputLayer, 1, 0);
+	testLayer(hiddenLayer, 1);
+	testLayer(outputLayer, 0);
 }
 
 void connectHiddenLayersWithOutputLayerWithNineNeuronEach() {
@@ -121,8 +124,8 @@ void connectHiddenLayersWithOutputLayerWithNineNeuronEach() {
 
 	hiddenLayer.connectTo(outputLayer);
 
-	testLayer(hiddenLayer, 0, 9);
-	testLayer(outputLayer, 9, 0);
+	testLayer(hiddenLayer, 9);
+	testLayer(outputLayer, 0);
 }
 
 void connectHiddenLayersWithOutputLayerWithDifferenNeuronCount() {
@@ -132,8 +135,48 @@ void connectHiddenLayersWithOutputLayerWithDifferenNeuronCount() {
 
 	hiddenLayer.connectTo(outputLayer);
 
-	testLayer(hiddenLayer, 0, 5);
-	testLayer(outputLayer, 3, 0);
+	testLayer(hiddenLayer, 5);
+	testLayer(outputLayer, 0);
+}
+
+void connectInputLayerWithHiddenLayerCheckWeights() {
+	using namespace nn;
+	InputLayer inputLayer { 3 };
+	HiddenLayer hiddenLayer { 3 };
+
+	inputLayer.connectTo(hiddenLayer);
+
+	std::for_each(inputLayer.getNeurons().begin(), inputLayer.getNeurons().end(), [](auto const& neuron) {
+		std::for_each(neuron.getOutConnections().begin(), neuron.getOutConnections().end(), [](auto const& connection) {
+					ASSERT_EQUAL(0.f, connection.getWeight());
+				});
+	});
+}
+
+void connectInputLayerWithHiddenLayerWithWeights() {
+	using namespace nn;
+	InputLayer inputLayer { 3 };
+	HiddenLayer hiddenLayer { 3 };
+
+	std::vector<float> weights(inputLayer.getNeurons().size() * hiddenLayer.getNeurons().size());
+	std::generate(weights.begin(), weights.end(), [n = 1] () mutable {return n++;});
+
+	inputLayer.connectTo(hiddenLayer, weights);
+
+	size_t index { };
+	std::for_each(inputLayer.getNeurons().begin(), inputLayer.getNeurons().end(), [&index, &weights](auto const& neuron) {
+		std::for_each(neuron.getOutConnections().begin(), neuron.getOutConnections().end(), [&index, &weights](auto const& connection) {
+					ASSERT_EQUAL(weights.at(index++), connection.getWeight());
+				});
+	});
+}
+
+void connectInputLayerWithHiddenLayerWithWrongAmountOfWeights() {
+	using namespace nn;
+	InputLayer inputLayer { 3 };
+	HiddenLayer hiddenLayer { 3 };
+
+	ASSERT_THROWS((inputLayer.connectTo(hiddenLayer, { })), std::invalid_argument);
 }
 
 cute::suite make_suite_LayerTest() {
@@ -153,5 +196,8 @@ cute::suite make_suite_LayerTest() {
 	s.push_back(CUTE(connectHiddenLayersWithOutputLayerWithOneNeuronEach));
 	s.push_back(CUTE(connectHiddenLayersWithOutputLayerWithNineNeuronEach));
 	s.push_back(CUTE(connectHiddenLayersWithOutputLayerWithDifferenNeuronCount));
+	s.push_back(CUTE(connectInputLayerWithHiddenLayerCheckWeights));
+	s.push_back(CUTE(connectInputLayerWithHiddenLayerWithWeights));
+	s.push_back(CUTE(connectInputLayerWithHiddenLayerWithWrongAmountOfWeights));
 	return s;
 }
