@@ -27,10 +27,12 @@ struct Neuron {
 		connections.push_back(connection { other, weight });
 	}
 
-	void setInput(double input) {
+	template<typename T1>
+	void setInput(T1 input) {
 		value = input;
 	}
-	void addInput(double input) {
+	template<typename T1>
+	void addInput(T1 input) {
 		value += input;
 	}
 	void clearInput() {
@@ -89,10 +91,12 @@ struct Neuron {
 		ptr.get()->connectTo(other, weight);
 	}
 
-	void setInput(double input) {
+	template<typename T>
+	void setInput(T input) {
 		ptr.get()->setInput(input);
 	}
-	void addInput(double input) {
+	template<typename T>
+	void addInput(T input) {
 		ptr.get()->addInput(input);
 	}
 	void clearInput() {

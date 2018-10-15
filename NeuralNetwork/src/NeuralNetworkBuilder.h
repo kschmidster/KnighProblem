@@ -32,6 +32,7 @@ struct NeuralNetworkBuilder {
 		return NeuralNetwork(std::move(inputLayer), std::move(outputLayer), std::move(hiddenLayers));
 	}
 
+private:
 	InputLayer inputLayer { };
 	OutputLayer outputLayer { };
 	std::vector<HiddenLayer> hiddenLayers { };

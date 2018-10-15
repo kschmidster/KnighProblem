@@ -46,14 +46,19 @@ struct NeuralNetwork {
 		randomizeWeights();
 	}
 
-	// Could also use some own number type
-	void setInputs(std::vector<double> const& inputs) {
+	template<typename T>
+	void setInputs(std::vector<T> const& inputs) {
 		inputLayer.setInputs(inputs);
 	}
-	std::vector<double> const& getOutputs() {
+	const std::vector<double> getOutputs() {
 		clearInputsInHiddenAndOutputLayers();
 		processInputs();
 		return outputLayer.getOutputs();
+	}
+
+	template<typename T>
+	void trainNetwork(std::vector<T> const& inputs, std::vector<double> const& shouldOutputs) {
+		// TODO implement
 	}
 
 	const_ref_inputLayer getInputLayer() const {
