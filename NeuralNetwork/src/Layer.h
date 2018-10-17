@@ -72,8 +72,9 @@ using layer::Layer;
 struct InputLayer: Layer {
 	using Layer::Layer;
 
-	void setInputs(std::vector<double> const& inputs) {
-		std::for_each(inputs.begin(), inputs.end(), [&](double input) {
+	template<typename T>
+	void setInputs(std::vector<T> const& inputs) {
+		std::for_each(inputs.begin(), inputs.end(), [&](T input) {
 			std::for_each(neurons.begin(), neurons.end(), [&input](Neuron &neuron) {
 						neuron.setInput(input);
 					});
@@ -88,8 +89,8 @@ struct HiddenLayer: Layer {
 struct OutputLayer: Layer {
 	using Layer::Layer;
 
-	std::vector<double> getOutputs() const {
-		std::vector<double> outputs {  };
+	const std::vector<double> getOutputs() const {
+		std::vector<double> outputs (neurons.size());
 		std::for_each(neurons.begin(), neurons.end(), [&outputs](Neuron const& neuron) {
 			outputs.push_back(neuron.getValue());
 		});
